@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS HUD - MARK 85</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. Boot Screen (شاشة الإقلاع) -->
+    <div id="boot-screen">
+        <div class="boot-loader">
+            <h1 class="glow-text">JARVIS v4.8</h1>
+            <div class="boot-terminal" id="boot-terminal"></div>
+            <div class="boot-progress"><div id="boot-bar"></div></div>
+        </div>
+    </div>
+
+    <!-- Canvas الخلفية للجزيئات والماتريكس -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- 2. Main HUD Interface -->
+    <div id="hud-container">
+        
+        <!-- Top Left: Time & Location -->
+        <div class="panel card-3d">
+            <div class="panel-title">SYSTEM TIME & LOC</div>
+            <div class="stat-value" id="clock">00:00:00</div>
+            <div id="date" style="font-size: 0.8rem; margin-top: 5px;">LOADING...</div>
+            <div id="location" style="font-size: 0.75rem; color: #aaa; margin-top: 5px;">GPS: DETECTING...</div>
+        </div>
+
+        <!-- Top Center: Weather Real API -->
+        <div class="panel card-3d">
+            <div class="panel-title">ENVIRONMENTAL METRICS</div>
+            <div class="stat-value" id="weather-temp">--°C</div>
+            <div id="weather-desc" style="font-size: 0.8rem; text-transform: uppercase;">CONNECTING TO SATELLITE...</div>
+        </div>
+
+        <!-- Top Right: Network Status -->
+        <div class="panel card-3d">
+            <div class="panel-title">NETWORK TELEMETRY</div>
+            <table class="network-table">
+                <tr><td>IP:</td><td id="net-ip" style="color:#fff;">0.0.0.0</td></tr>
+                <tr><td>PING:</td><td id="net-ping">-- ms</td></tr>
+                <tr><td>DOWN:</td><td id="net-down">-- Mbps</td></tr>
+            </table>
+        </div>
+
+        <!-- Middle Left: Threat Radar -->
+        <div class="panel card-3d">
+            <div class="panel-title">THREAT DETECTION RADAR</div>
+            <div class="radar" id="main-radar"></div>
+        </div>
+
+        <!-- Middle Center: JARVIS AI CORE -->
+        <div class="panel core-panel card-3d" id="jarvis-core">
+            <div class="panel-title" style="top: 20px;">JARVIS AI CORE</div>
+            <div class="voice-container" id="voiceWave">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+            <span id="voice-status" style="font-size: 0.7rem; margin-top: 10px; letter-spacing: 1px;">SAY "JARVIS"</span>
+        </div>
+
+        <!-- Middle Right: Camera Face Scan -->
+        <div class="panel card-3d">
+            <div class="panel-title">BIOMETRIC FACE SCAN</div>
+            <div class="face-scan-container">
+                <div class="face-scan-mesh" id="face-mesh"></div>
+                <div class="scan-line"></div>
+                <div id="scan-status" class="scan-status-text">WAITING FOR CAMERA...</div>
+            </div>
+        </div>
+
+        <!-- Bottom Left: Circular CPU Usage -->
+        <div class="panel card-3d">
+            <div class="panel-title">CPU CORE LOAD</div>
+            <div class="cpu-circle-container">
+                <svg width="120" height="120">
+                    <circle cx="60" cy="60" r="50" class="bg-circle"></circle>
+                    <circle cx="60" cy="60" r="50" class="prog-circle" id="cpu-circle"></circle>
+                </svg>
+                <div class="cpu-text" id="cpu-text">0%</div>
+            </div>
+        </div>
+
+        <!-- Bottom Center: Console Logs & Settings -->
+        <div class="panel card-3d" style="grid-column: 2 / span 2;">
+            <div class="panel-title">CONSOLE LOGS & SYSTEM THEME</div>
+            <div id="logs">> Systems online. Grid secured.</div>
+            <div class="controls-row">
+                <button class="hud-btn" onclick="toggleMatrix()">MATRIX MODE</button>
+                <button class="hud-btn mode-red" onclick="activateMark85()">MARK 85 MODE</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
