@@ -1,0 +1,118 @@
+:root {
+    --neon-blue: #00f0ff;
+    --neon-glow: rgba(0, 240, 255, 0.4);
+    --dark-bg: #020813;
+    --panel-bg: rgba(2, 8, 19, 0.65);
+}
+
+/* الـ Mode الخاص بـ MARK 85 (الأحمر القتالي) */
+.mark85-active {
+    --neon-blue: #ff003c;
+    --neon-glow: rgba(255, 0, 60, 0.5);
+    --dark-bg: #0f0206;
+    --panel-bg: rgba(25, 2, 8, 0.75);
+    animation: screenShake 0.15s infinite alternate;
+}
+
+@keyframes screenShake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    100% { transform: translate(-1px, -1px) rotate(0.5deg); }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; }
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--neon-blue);
+    height: 100vh;
+    overflow: hidden;
+    perspective: 1000px; /* تفعيل البعد الثالث للمؤثرات */
+    transition: background 0.5s ease;
+}
+
+/* Hologram Effect Scanlines */
+body::after {
+    content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 240, 255, 0.08) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+    z-index: 9999; background-size: 100% 4px, 6px 100%; pointer-events: none;
+}
+
+/* Boot Screen styling */
+#boot-screen {
+    position: fixed; top:0; left:0; width:100%; height:100%; background:#000;
+    z-index: 10000; display: flex; justify-content: center; align-items: center;
+    transition: opacity 0.8s ease;
+}
+.boot-loader { width: 400px; text-align: left; }
+.boot-terminal { background: #050505; border: 1px solid #333; height: 150px; padding: 10px; font-size: 0.8rem; overflow: hidden; margin: 15px 0; color: #00ff00; }
+.boot-progress { width:100%; height:4px; background:#222; }
+#boot-bar { width:0%; height:100%; background: var(--neon-blue); transition: width 0.1s; }
+.glow-text { text-shadow: 0 0 15px var(--neon-blue); text-align: center; margin-bottom: 10px;}
+
+/* Background Canvas */
+#particle-canvas { position: fixed; top:0; left:0; width:100%; height:100%; z-index: 1; pointer-events: none;}
+
+/* Main Dashboard Grid */
+#hud-container {
+    position: relative; z-index: 2; height: 100vh; padding: 25px;
+    display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 20px;
+    transform-style: preserve-3d; transition: transform 0.1s ease-out;
+}
+
+.panel {
+    border: 1px solid var(--neon-blue);
+    box-shadow: inset 0 0 15px var(--neon-glow), 0 0 10px var(--neon-glow);
+    background: var(--panel-bg); backdrop-filter: blur(5px);
+    padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative; border-radius: 4px; transition: all 0.3s ease;
+}
+.panel-title { position: absolute; top: 6px; left: 12px; font-size: 0.75rem; letter-spacing: 2px; opacity: 0.8; font-weight: bold;}
+
+/* Radar Component */
+.radar { width: 140px; height: 140px; border: 2px solid var(--neon-blue); border-radius: 50%; position: relative; overflow: hidden; }
+.radar::before {
+    content: ''; position: absolute; width: 100%; height: 100%;
+    background: conic-gradient(from 0deg, transparent 60%, var(--neon-blue));
+    animation: rotateRadar 2.5s linear infinite; border-radius: 50%;
+}
+@keyframes rotateRadar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* Face Scan Component */
+.face-scan-container { width: 120px; height: 130px; border: 1px solid var(--neon-blue); position: relative; overflow: hidden; }
+.face-scan-mesh {
+    width: 100%; height: 100%; opacity: 0.4;
+    background-image: radial-gradient(var(--neon-blue) 1px, transparent 0), radial-gradient(var(--neon-blue) 1px, transparent 0);
+    background-size: 8px 8px; background-position: 0 0, 4px 4px;
+}
+.scan-line { width: 100%; height: 3px; background: var(--neon-blue); box-shadow: 0 0 12px var(--neon-blue); position: absolute; top: 0; animation: scanning 2s ease-in-out infinite; }
+@keyframes scanning { 0%, 100% { top: 0%; } 50% { top: 100%; } }
+.scan-status-text { font-size: 0.65rem; text-align: center; margin-top: 5px; position: absolute; bottom: 5px; width: 100%; background: rgba(0,0,0,0.7); }
+
+/* Circular CPU Component */
+.cpu-circle-container { position: relative; width: 120px; height: 120px; }
+circle { fill: none; stroke-width: 6; transform: rotate(-90deg); transform-origin: 50% 50%; }
+.bg-circle { stroke: rgba(0, 240, 255, 0.1); }
+.prog-circle { stroke: var(--neon-blue); stroke-dasharray: 314; stroke-dashoffset: 314; transition: stroke-dashoffset 0.4s ease; filter: drop-shadow(0 0 5px var(--neon-blue));}
+.cpu-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.4rem; font-weight: bold; }
+
+/* AI Core & Voice Pulse */
+.core-panel { border-radius: 50%; border: 3px double var(--neon-blue); cursor: pointer; }
+.voice-container { display: flex; align-items: center; gap: 6px; height: 50px; }
+.bar { width: 6px; height: 12px; background: var(--neon-blue); animation: voicePulse 0.4s ease-in-out infinite alternate; animation-play-state: paused; }
+.voice-container.listening .bar { animation-play-state: running; }
+.bar:nth-child(2) { animation-delay: 0.1s; } .bar:nth-child(3) { animation-delay: 0.25s; } .bar:nth-child(4) { animation-delay: 0.15s; }
+@keyframes voicePulse { from { height: 12px; } to { height: 55px; } }
+
+/* Extra Utilities */
+.stat-value { font-size: 2rem; font-weight: bold; margin-top: 10px; text-shadow: 0 0 10px var(--neon-glow); }
+.network-table { width: 100%; font-size: 0.8rem; margin-top: 15px; border-collapse: collapse; }
+.network-table td { padding: 4px; border-bottom: 1px solid rgba(0, 240, 255, 0.1); }
+#logs { width:100%; height:55px; font-size:0.75rem; text-align:left; background:rgba(0,0,0,0.3); padding:8px; overflow:hidden; border-left:2px solid var(--neon-blue); margin-bottom: 10px;}
+.controls-row { display: flex; gap: 10px; width: 100%; }
+.hud-btn {
+    flex: 1; padding: 8px; background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue);
+    cursor: pointer; font-weight: bold; font-size: 0.75rem; transition: all 0.2s;
+}
+.hud-btn:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px var(--neon-blue); }
+.hud-btn.mode-red { border-color: #ff003c; color: #ff003c; }
+.hud-btn.mode-red:hover { background: #ff003c; color: #000; box-shadow: 0 0 15px #ff003c; }
